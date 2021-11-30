@@ -1,7 +1,7 @@
 <template>
   <div>
     <button v-on:click="handleClick">Say Hello via SMS!</button>
-    <p>{{status}}</p>
+    <p>{{ status }}</p>
   </div>
 </template>
 
