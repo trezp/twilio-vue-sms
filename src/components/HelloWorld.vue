@@ -1,7 +1,8 @@
 <template>
   <div>
-    <button v-on:click="handleClick">Say Hello via SMS!</button>
-    <p>{{ status }}</p>
+    <input v-model="txtMsg" type="text" name="msg" id="msg" class="sms-input">
+    <button @click="handleClick">Send Text Confirmation</button>
+    <p v-if="smsStatus">Sent Status: {{ smsStatus }}</p>
   </div>
 </template>
 
@@ -10,30 +11,46 @@ export default {
   name: 'HelloWorld',
   data() {
     return {
-      status: '',
+      smsStatus: '',
+      txtMsg: ''
     }
   },
   methods: {
     async handleClick(){
-      const response = await fetch('https://vue-sms-1652.twil.io/sms');
-      const data = await response.json();
-      console.log(data.status)
-      this.status = data.status;
+      try {
+        const response = await fetch('https://vue-sms-1652.twil.io/sms', {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({Body: this.txtMsg}),
+       });
+        const data = await response.json();
+        this.smsStatus = data.status;
+        this.txtMsg = "";
+      } catch(err){
+        console.log(err);
+      }  
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   button {
     color: #000;
     padding: 15px 10px;
     border: 1px solid black; 
     border-radius: 3px;
+    margin: 16px;
   }
   button:hover {
     color: #fff;
     background: navy;
+  }
+  .sms-input {
+    margin: auto;
+    padding: 14px;
+    width: 500px;
   }
 </style>
